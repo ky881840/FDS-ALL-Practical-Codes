@@ -1,0 +1,103 @@
+#include <iostream>
+#include <cstring>
+#define MAX 50
+using namespace std;
+
+class STACK {
+private:
+    char arr[MAX];
+    int top;
+
+public:
+    STACK() { top = -1; }
+
+    void push(char);
+    void reverse();
+    void display();
+    void convert(char[]);
+    void palindrome();
+};
+
+void STACK::push(char c) {
+    if (top < MAX - 1) {
+        arr[++top] = c;
+        cout << endl << c << " is pushed on stack.";
+    } else {
+        cout << endl << "Stack overflow!";
+    }
+}
+
+void STACK::display() {
+    cout << "\n\nOriginal string is: ";
+    for (int i = 0; i <= top; i++) {
+        cout << arr[i];
+    }
+    cout << endl;
+}
+
+void STACK::reverse() {
+    cout << "\n\nReversed string is: ";
+    for (int i = top; i >= 0; i--) {
+        cout << arr[i];
+    }
+    cout << endl;
+}
+
+void STACK::convert(char str[]) {
+    int j, k, len = strlen(str);
+    for (j = 0, k = 0; j < len; j++) {
+        if ((str[j] >= 'a' && str[j] <= 'z') || (str[j] >= 'A' && str[j] <= 'Z')) {
+            if (str[j] >= 'A' && str[j] <= 'Z') {
+                str[k] = str[j] + 32; 
+            } else {
+                str[k] = str[j];
+            }
+            k++;
+        }
+    }
+    str[k] = '\0';
+    cout << endl << "Converted String: " << str << "\n";
+}
+
+void STACK::palindrome() {
+    char str[MAX];
+    for (int j = 0; j <= top; j++) {
+        str[j] = arr[j];
+    }
+    str[top + 1] = '\0'; 
+
+    bool isPalindrome = true;
+    for (int j = 0; j < top / 2 + 1; j++) {
+        if (str[j] != str[top - j]) {
+            isPalindrome = false;
+            break;
+        }
+    }
+    
+    if (isPalindrome) {
+        cout << "\n\nString is a palindrome.";
+    } else {
+        cout << "\n\nString is not a palindrome.";
+    }
+}
+
+int main() {
+    STACK stack;
+    char str[MAX];
+
+    cout << "\nEnter string to be reversed and check if it is a palindrome:\n";
+    cin.getline(str, MAX);
+
+    stack.convert(str);
+
+    for (int i = 0; str[i] != '\0'; i++) {
+        stack.push(str[i]);
+    }
+
+    stack.display();
+    stack.reverse();
+    stack.palindrome();
+
+    return 0;
+}
+
