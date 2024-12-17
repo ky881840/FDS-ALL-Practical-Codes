@@ -1,0 +1,150 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Member {
+public:
+    string prn;  
+    string name; 
+    Member* next;    
+
+    Member(string prn, string name) : prn(prn), name(name), next(nullptr) {}
+};
+
+class Club {
+private:
+    Member* head; 
+    Member* tail; 
+    int memberCount;
+
+public:
+    Club() : head(nullptr), tail(nullptr), memberCount(0) {}
+
+
+    void addMember(const string& prn, const string& name) {
+        Member* newMember = new Member(prn, name);
+        if (!head) {
+            head = newMember; 
+            tail = newMember; 
+        } else {
+            tail->next = newMember; 
+            tail = newMember;        
+        }
+        memberCount++;
+    }
+
+
+    void deleteMember(const string& prn) {
+        if (!head) {
+            cout << "No members to delete." << endl;
+            return;
+        }
+
+
+        if (head->prn == prn) {
+            Member* temp = head;
+            head = head->next;
+            delete temp;
+            memberCount--;
+            cout << "Deleted president." << endl;
+            return;
+        }
+
+        Member* current = head;
+        Member* previous = nullptr;
+
+        while (current && current->prn != prn) {
+            previous = current;
+            current = current->next;
+        }
+
+        if (!current) {
+            cout << "Member not found." << endl;
+            return;
+        }
+
+
+        previous->next = current->next;
+        if (current == tail) {
+            tail = previous; 
+        }
+        delete current;
+        memberCount--;
+        cout << "Deleted member with PRN: " << prn << endl;
+    }
+
+    int totalMembers() const {
+        return memberCount;
+    }
+
+
+    void displayMembers() const {
+        if (!head) {
+            cout << "No members in the club." << endl;
+            return;
+        }
+        cout << "Members of the Pinnacle Club:" << endl;
+        cout << "President: " << head->name << " (PRN: " << head->prn << ")" << endl;
+        Member* current = head->next;
+        while (current) {
+            cout << "Member: " << current->name << " (PRN: " << current->prn << ")" << endl;
+            current = current->next;
+        }
+        cout << "Secretary: " << tail->name << " (PRN: " << tail->prn << ")" << endl;
+    }
+
+    
+    void concatenate(Club& other) {
+        if (!head) {
+            head = other.head;
+            tail = other.tail;
+        } else if (other.head) {
+            tail->next = other.head; 
+            tail = other.tail;        
+        }
+        memberCount += other.memberCount;
+    }
+
+    ~Club() {
+        Member* current = head;
+        while (current) {
+            Member* temp = current;
+            current = current->next;
+            delete temp;
+        }
+    }
+};
+
+int main() {
+    Club divisionA;
+    Club divisionB;
+
+
+    divisionA.addMember("PRN001", "Alice");
+    divisionA.addMember("PRN002", "Bob");
+    divisionA.addMember("PRN003", "Charlie");
+
+    
+    divisionB.addMember("PRN004", "David");
+    divisionB.addMember("PRN005", "Eva");
+
+    std::cout << "Division A Membeers:" <<endl;
+    divisionA.displayMembers();
+    
+    cout << "\nDivision B Members:" << endl;
+    divisionB.displayMembers();
+
+    
+    cout << "\nTotal members in Division A: " << divisionA.totalMembers() << endl;
+    
+    divisionA.deleteMember("PRN002");
+    divisionA.displayMembers();
+
+    
+    divisionA.concatenate(divisionB);
+    cout << "\nAll Members After Concatenation:" << endl;
+    divisionA.displayMembers();
+
+    return 0;
+    
+}
