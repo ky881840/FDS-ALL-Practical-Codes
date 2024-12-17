@@ -1,0 +1,155 @@
+#include <iostream>
+#include <stdexcept>
+using namespace std;
+class Deque {
+private:
+    int* arr;       
+    int front;      
+    int rear;       
+    int maxSize;    
+    int currentSize;
+
+public:
+    Deque(int size) {
+        maxSize = size;
+        arr = new int[maxSize];
+        front = -1;
+        rear = 0;
+        currentSize = 0;
+    }
+
+    ~Deque() {
+        delete[] arr;
+    }
+
+    bool isFull() {
+        return currentSize == maxSize;
+    }
+
+    bool isEmpty() {
+        return currentSize == 0;
+    }
+
+    void addFront(int value) {
+        if (isFull()) {
+            throw std::overflow_error("Deque is full. Cannot add to front.");
+        }
+        front = (front + 1) % maxSize; 
+        arr[front] = value;
+        currentSize++;
+        if (rear == 0) { 
+            rear = front; 
+        }
+    }
+
+    void addRear(int value) {
+        if (isFull()) {
+            throw std::overflow_error("Deque is full. Cannot add to rear.");
+        }
+        rear = (rear - 1 + maxSize) % maxSize; 
+        arr[rear] = value;
+        currentSize++;
+        if (front == -1) { 
+            front = rear; 
+        }
+    }
+
+    void deleteFront() {
+        if (isEmpty()) {
+            throw std::underflow_error("Deque is empty. Cannot delete from front.");
+        }
+        front = (front - 1 + maxSize) % maxSize; 
+        currentSize--;
+        if (currentSize == 0) { 
+            front = -1;
+            rear = 0;
+        }
+    }
+
+    void deleteRear() {
+        if (isEmpty()) {
+            throw std::underflow_error("Deque is empty. Cannot delete from rear.");
+        }
+        rear = (rear + 1) % maxSize; 
+        currentSize--;
+        if (currentSize == 0) { 
+            front = -1;
+            rear = 0;
+        }
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Deque is empty." << endl;
+            return;
+        }
+        cout << "Deque elements: ";
+        for (int i = 0; i < currentSize; i++) {
+            cout << arr[(rear + i) % maxSize] << " ";
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    int maxSize;
+    cout << "Enter the maximum size of the deque: ";
+    cin >> maxSize;
+
+    Deque deque(maxSize);
+    int choice, value;
+
+    do {
+        cout << "\n1. Add to Front\n2. Add to Rear\n3. Delete from Front\n4. Delete from Rear\n5. Display Deque\n6. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter value to add to front: ";
+                cin >> value;
+                try {
+                    deque.addFront(value);
+                } catch (const std::overflow_error& e) {
+                    cout << e.what() << endl;
+                }
+                break;
+            case 2:
+                cout << "Enter value to add to rear: ";
+                cin >> value;
+                try {
+                    deque.addRear(value);
+                } catch (const std::overflow_error& e) {
+                    cout << e.what() << endl;
+                }
+                break;
+            case 3:
+                try {
+                    deque.deleteFront();
+                    cout << "Deleted from front." << endl;
+                } catch (const std::underflow_error& e) {
+                    cout << e.what() << endl;
+                }
+                break;
+            case 4:
+                try {
+                    deque.deleteRear();
+                    cout << "Deleted from rear." << endl;
+                } catch (const std::underflow_error& e) {
+                    cout << e.what() << endl;
+                }
+                break;
+            case 5:
+                deque.display();
+                break;
+            case 6:
+                cout << "Exiting..." << endl;
+                break;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    } while (choice != 6);
+
+    return 0;
+}
+
