@@ -1,0 +1,47 @@
+def insertion_sort(list1):
+    for i in range(1, len(list1)):
+        value = list1[i]
+        j = i - 1
+        while j >= 0 and value < list1[j]:
+            list1[j + 1] = list1[j]
+            j -= 1
+        list1[j + 1] = value
+    return list1
+
+def shell_sort(array, n):
+    interval = n // 2
+    while interval > 0:
+        for i in range(interval, n):
+            temp = array[i]
+            j = i
+            while j >= interval and array[j - interval] > temp:
+                array[j] = array[j - interval]
+                j -= interval
+            array[j] = temp
+        interval //= 2
+
+list_of_marks = []
+num_stu = int(input("How many number of students: "))
+for i in range(num_stu):
+    list_of_marks.append(float(input("Enter the marks: ")))
+flag=1
+while flag==1:
+    print("\n1. Insertion Sort \n2. Shell Sort \n3. Exit")
+    choice = int(input("\nEnter your choice: "))
+
+    if choice == 1:
+        print("The unsorted list is:", list_of_marks)
+        print("The sorted marks list by Insertion method is:", insertion_sort(list_of_marks))
+    elif choice == 2:
+        print("The unsorted list is:", list_of_marks)
+        size = len(list_of_marks)
+        shell_sort(list_of_marks, size)
+        print('Sorted marks list by ShellSort method is:', list_of_marks)
+    elif choice == 3:
+        print("\nThanks for using this program!!")
+        flag=0
+
+    else:
+        print("Invalid choice.")
+        flag=0
+
