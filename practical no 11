@@ -1,0 +1,113 @@
+#include <iostream>
+#define max 10
+using namespace std;
+struct queue 
+{
+    int data[max];
+    int rear,front;
+    
+};
+class Queue
+{
+    struct queue q;
+    public:
+    Queue()
+    {
+        q.front=-1;
+        q.rear=-1;
+    }
+    int isempty();
+    int isfull();
+    void enqueue(int);
+    int dequeue();
+    void display();
+};
+int Queue::isempty()
+{
+    if (q.front==q.rear)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+int Queue::isfull()
+{
+    if (q.rear==max-1)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+void Queue::enqueue(int x)
+{
+    q.data[++q.rear]=x;
+}
+int Queue::dequeue()
+{
+    return q.data[++q.front];
+}
+void Queue::display()
+{
+    cout<<" queue :";
+    for(int i=q.front+1;i<=q.rear;i++)
+    {
+        cout<<q.data[i];
+    }
+}
+
+int main()
+{
+    Queue jb;
+    int ch ,x;
+    do{cout<<" enter choice as 1 for add element 2 for delete element 3 for display element 4 for exit"<<endl;
+    cout<<" ";
+    cin>>ch;
+    switch(ch)
+    {
+        case 1:if(!jb.isfull())
+        {
+            cout<<" enter element"<<endl;
+            cout<<" ";
+            cin>>x;
+            jb.enqueue(x);
+            cout<<endl;
+        }
+        else
+        {
+            cout<<" queue is full"<<endl;
+        }
+        break;
+        case 2:if (!jb.isempty())
+        {
+            cout<<" delete"<<jb.dequeue()<<endl;
+            cout<<" remaing jobs :"<<endl;
+            jb.display();
+            cout<<endl;
+        }
+        else{
+        cout<<" queue is empty"<<endl;
+        }
+        break;
+        case 3:if (!jb.isempty())
+        {
+            cout<<"\n queue element :"<<endl;
+            jb.display();
+            cout<<endl;
+        }
+        else{
+        cout<<" queue is empty"<<endl;
+        }
+        break;
+        case 4:cout<<" exiting prog";
+    }
+    }
+    while(ch!=4);
+
+    return 0;
+}
